@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
     private Button nextPlayerButton;
     private Button readButton;
     private Button writeButton;
+    private Button populateButton;
 
     // spinner
     private ArrayList<String> teamVec; // array of teams
@@ -128,6 +129,7 @@ public class MainActivity extends Activity {
         nextPlayerButton = (Button)findViewById(R.id.next_player_button_widget);
         readButton = (Button)findViewById(R.id.read_button_widget);
         writeButton = (Button)findViewById(R.id.write_button_widget);
+        populateButton = (Button)findViewById(R.id.populate_button_widget);
 
         // initialize the colors
         backgroundColor = getResources().getColor(R.color.background_color);
@@ -164,6 +166,7 @@ public class MainActivity extends Activity {
         nextPlayerButton.setOnClickListener(new NextPlayerButtonListener());
         readButton.setOnClickListener(new ReadButtonListener());
         writeButton.setOnClickListener(new WriteButtonListener());
+        populateButton.setOnClickListener(new PopulateButtonListener());
     }
 
     /**
@@ -655,11 +658,11 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * listener class for the "count players" button
+     * listener class for the "Write" button
      */
     private class WriteButtonListener implements OnClickListener {
         /**
-         * respond to the press of the "New player" button
+         * respond to the press of the "Writer" button
          *
          * @see android.view.View.OnClickListener#onClick(android.view.View)
          */
@@ -679,6 +682,38 @@ public class MainActivity extends Activity {
             if (!database.writeData(new File(getFilesDir(),fileName))) {
                 flash();
                 return;
+            }
+        }
+    }
+
+    /**
+     * listener class for the "populate" button
+     */
+    private class PopulateButtonListener implements OnClickListener {
+
+        // our pre-initialized data
+        private String[][] data = {
+                {"John", "Silver", "Waves", "4"},
+                {"Lionel", "Messi", "Barcelona", "10"},
+                {"Fred", "Flintstone", "Waves", "8"},
+                {"George", "Jetson", "Barcelona", "12"},
+                {"Christine", "Sinclair", "Pilots", "12"},
+                {"Megan", "Rapinoe", "Pilots", "3"},
+                {"Stephanie", "Lopez", "Pilots", "9"},
+                {"Lindsey", "Huie", "Pilots", "17"},
+                {"Mandy", "Clemens", "Broncos", "5"},
+        };
+
+        /**
+         * respond to the press of the "Populate" button
+         *
+         * @see android.view.View.OnClickListener#onClick(android.view.View)
+         */
+        @Override
+        public void onClick(View view) {
+            for (String[] elements : data) {
+                database.addPlayer(elements[0], elements[1], Integer.parseInt(elements[3]), elements[2]);
+                addTeam(elements[2]);
             }
         }
     }
