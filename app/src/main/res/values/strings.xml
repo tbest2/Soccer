@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Soccer_Application</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
     <string name="first_name_label">First name:</string>
     <string name="last_name_label">Last name:</string>
     <string name="team_label">Team: </string>
