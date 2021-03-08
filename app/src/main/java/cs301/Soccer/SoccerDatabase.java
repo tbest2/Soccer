@@ -3,8 +3,6 @@ package cs301.Soccer;
 import android.util.Log;
 import cs301.Soccer.soccerPlayer.SoccerPlayer;
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -58,46 +56,6 @@ public class SoccerDatabase implements SoccerDB {
     }
 
     /**
-     * increment a player's assists
-     *
-     * @see SoccerDB#bumpAssists(String, String)
-     */
-    @Override
-    public boolean bumpAssists(String firstName, String lastName) {
-        return false;
-    }
-
-    /**
-     * increment a player's shots
-     *
-     * @see SoccerDB#bumpShots(String, String)
-     */
-    @Override
-    public boolean bumpShots(String firstName, String lastName) {
-        return false;
-    }
-
-    /**
-     * increment a player's saves
-     *
-     * @see SoccerDB#bumpSaves(String, String)
-     */
-    @Override
-    public boolean bumpSaves(String firstName, String lastName) {
-        return false;
-    }
-
-    /**
-     * increment a player's fouls
-     *
-     * @see SoccerDB#bumpFouls(String, String)
-     */
-    @Override
-    public boolean bumpFouls(String firstName, String lastName) {
-        return false;
-    }
-
-    /**
      * increment a player's yellow cards
      *
      * @see SoccerDB#bumpYellowCards(String, String)
@@ -131,11 +89,11 @@ public class SoccerDatabase implements SoccerDB {
     /**
      * gives the nth player on a the given team
      *
-     * @see SoccerDB#playerNum(int, String)
+     * @see SoccerDB#playerIndex(int, String)
      */
     // get the nTH player
     @Override
-    public SoccerPlayer playerNum(int idx, String teamName) {
+    public SoccerPlayer playerIndex(int idx, String teamName) {
         return null;
     }
 
