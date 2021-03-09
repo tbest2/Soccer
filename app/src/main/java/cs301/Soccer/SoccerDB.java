@@ -121,4 +121,9 @@ public interface SoccerDB {
      *
      */
     public HashSet<String>getTeams();
+
+    /**
+     * Removes all players from the database
+     */
+    public boolean clear();
 }

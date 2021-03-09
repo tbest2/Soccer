@@ -14,6 +14,9 @@ import java.util.*;
  */
 public class SoccerDatabase implements SoccerDB {
 
+    // dummied up variable; you will need to change this
+    private Hashtable database;
+
     /**
      * add a player
      *
@@ -140,4 +143,15 @@ public class SoccerDatabase implements SoccerDB {
         return new HashSet<String>();
     }
 
+    /**
+     * Helper method to empty the database and the list of teams in the spinner;
+     * this is faster than restarting the app
+     */
+    public boolean clear() {
+        if(database != null) {
+            database.clear();
+            return true;
+        }
+        return false;
+    }
 }

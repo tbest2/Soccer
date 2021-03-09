@@ -22,5 +22,6 @@
     <string name="add_player_button">Add player</string>
     <string name="find_player_button">Find player</string>
     <string name="remove_player_button">Remove player</string>
+    <string name="clear_database_button">Clear database</string>
     <string name="all_teams">### ALL ###</string>
 </resources>

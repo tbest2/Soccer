@@ -9,6 +9,7 @@ package cs301.Soccer;
 
 // imports
 import android.app.Activity;
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import cs301.Soccer.soccerPlayer.SoccerPlayer;
 import java.io.File;
 import java.util.ArrayList;
@@ -46,9 +49,10 @@ public class MainActivity extends Activity {
     private EditText countField;
 
     // buttons
-    private Button newButton;
+    private Button addButton;
     private Button findButton;
     private Button removeButton;
+    private Button clearButton;
     private Button incrGoalButton;
     private Button incrYellowCardButton;
     private Button incrRedCardButton;
@@ -102,9 +106,10 @@ public class MainActivity extends Activity {
         yellowsField = (EditText)findViewById(R.id.yellow_cards_field);
         redsField = (EditText)findViewById(R.id.red_cards_field);
         countField = (EditText)findViewById(R.id.player_count_field);
-        newButton = (Button)findViewById(R.id.add_player_button_widget);
+        addButton = (Button)findViewById(R.id.add_player_button_widget);
         findButton = (Button)findViewById(R.id.find_player_button_widget);
         removeButton = (Button)findViewById(R.id.remove_player_button_widget);
+        clearButton = (Button)findViewById(R.id.clear_database_button_widget);
         incrGoalButton = (Button)findViewById(R.id.incr_goal_button_widget);
         incrYellowCardButton = (Button)findViewById(R.id.incr_yellow_card_button_widget);
         incrRedCardButton = (Button)findViewById(R.id.incr_red_card_button_widget);
@@ -135,9 +140,10 @@ public class MainActivity extends Activity {
         spinner.setAdapter(adapter);
 
         // define listeners for all the buttons
-        newButton.setOnClickListener(new NewButtonListener());
+        addButton.setOnClickListener(new AddButtonListener());
         findButton.setOnClickListener(new FindButtonListener());
         removeButton.setOnClickListener(new RemoveButtonListener());
+        clearButton.setOnClickListener(new ClearButtonListener());
         incrGoalButton.setOnClickListener(new PlusGoalsButtonListener());
         incrYellowCardButton.setOnClickListener(new PlusYellowsButtonListener());
         incrRedCardButton.setOnClickListener(new PlusRedsButtonListener());
@@ -239,8 +245,10 @@ public class MainActivity extends Activity {
         // if player is already there, leave things alone
         if (teamVec.indexOf(name) >= 0) return;
 
-        // add the name; resort
-        teamVec.add(name);
+        // create a new instance of the String so that .equals() must be used to test equality
+        // instead of ==
+        // add the name and re-sort
+        teamVec.add(new String(name));
         Collections.sort(teamVec);
 
         // create new adapter, add the updated elements and connect to the spinner
@@ -251,6 +259,31 @@ public class MainActivity extends Activity {
         spinner.setAdapter(spinnerAdapter);
         spinnerAdapter.addAll(teamVec);
         spinnerAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Remove all teams in the spinner
+     */
+    private void clearTeams() {
+        teamVec.clear();
+        teamVec.add(allTeamsString);
+
+        // create new adapter, add the updated elements and connect to the spinner
+        ArrayAdapter<String> spinnerAdapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
+                        android.R.id.text1);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinnerAdapter.addAll(teamVec);
+        spinnerAdapter.notifyDataSetChanged();
+    }
+
+    private void toast(CharSequence message) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
     }
 
     /**
@@ -282,7 +315,7 @@ public class MainActivity extends Activity {
     /**
      * listener class for the "New player" button
      */
-    private class NewButtonListener implements OnClickListener {
+    private class AddButtonListener implements OnClickListener {
         /**
          * respond to the press of the "New player" button
          *
@@ -320,6 +353,8 @@ public class MainActivity extends Activity {
             if (currentPlayer != null) { // in case getPlayer is not yet implemented
                 updateAll(true);
             }
+
+            toast("Player Added");
         }
 
     }
@@ -356,6 +391,7 @@ public class MainActivity extends Activity {
             } else {
                 currentPlayer = temp;
                 updateAll(true);
+                toast("Found Player");
             }
         }
     }
@@ -390,6 +426,28 @@ public class MainActivity extends Activity {
             else {
                 currentPlayer = null;
                 updateAll(false);
+                toast("Removed Player");
+            }
+        }
+    }
+
+    /**
+     * listener class for the "Clear Database" button
+     */
+    private class ClearButtonListener implements OnClickListener {
+        /**
+         * respond to the press of the "Clear Database" button
+         *
+         * @see android.view.View.OnClickListener#onClick(android.view.View)
+         */
+        @Override
+        public void onClick(View view) {
+            boolean result = database.clear();
+            clearTeams();
+            currentPlayer = null;
+            updateAll(false);
+            if(result) {
+                toast("Database Cleared");
             }
         }
     }
@@ -582,6 +640,8 @@ public class MainActivity extends Activity {
 
             // update the GUI
             updateAll(false);
+
+            toast("Read Successful");
         }
     }
 
@@ -600,7 +660,7 @@ public class MainActivity extends Activity {
             // get the file name from the text field
             String fileName = fileNameField.getText().toString();
 
-            // if the file name is empty, flash and nreturn
+            // if the file name is empty, flash and return
             if (fileName.isEmpty()) {
                 flash();
                 return;
@@ -611,6 +671,8 @@ public class MainActivity extends Activity {
                 flash();
                 return;
             }
+
+            toast("Write Successful");
         }
     }
 
@@ -643,6 +705,8 @@ public class MainActivity extends Activity {
                 database.addPlayer(elements[0], elements[1], Integer.parseInt(elements[3]), elements[2]);
                 addTeam(elements[2]);
             }
+
+            toast("Players Populated");
         }
     }
 
