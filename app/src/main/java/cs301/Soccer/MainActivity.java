@@ -303,9 +303,7 @@ public class MainActivity extends Activity {
                 topView.invalidate();
             }
             @Override
-            public void onTick(long millis) {
-                cancel();
-            }
+            public void onTick(long millis) {  }
         };
 
         // start the timer
