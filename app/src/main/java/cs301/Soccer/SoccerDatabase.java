@@ -3,7 +3,10 @@ package cs301.Soccer;
 import android.util.Log;
 import cs301.Soccer.soccerPlayer.SoccerPlayer;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * Soccer player database -- presently, all dummied up
@@ -114,16 +117,20 @@ public class SoccerDatabase implements SoccerDB {
     @Override
     // report number of players on a given team (or all players, if null)
     public int numPlayers(String teamName) {
-//        int num = 0;
-//      for(Iterator<SoccerPlayer> iterator = database.values().iterator(); iterator.hasNext();){
-//          SoccerPlayer player = iterator.next();
-//          if(player.getTeamName() == teamName){
-//              num++;
-//          }
-//      }
-//      return num;
+        if(teamName == null){
+            return database.size();
+        }
 
-        return -1;
+        int num = 0;
+        SoccerPlayer[] a = database.values().toArray(new SoccerPlayer[database.size()]);
+        for(int i = 0; i < a.length; i++){
+
+            if (a[i].getTeamName().equals(teamName)){
+                num++;
+            }
+        }
+            return num;
+
     }
 
     /**
@@ -134,7 +141,31 @@ public class SoccerDatabase implements SoccerDB {
     // get the nTH player
     @Override
     public SoccerPlayer playerIndex(int idx, String teamName) {
-        return null;
+        SoccerPlayer[] a = database.values().toArray(new SoccerPlayer[database.size()]);
+        if(teamName == null){
+            if(idx >= a.length){ return null;}
+            return a[idx];
+        } else {
+
+            int num = 0;
+            //gets number of plauyers on team
+            for(int i = 0; i < a.length; i++){
+                if(a[i].getTeamName().equals(teamName)){
+                    num++;
+                }
+            }
+            if(idx >= num){ return null;}
+            //gets soccerplayer of index in the team
+            SoccerPlayer[] b = new SoccerPlayer[num];
+            int x = 0;
+            for(int i = 0; i < a.length; i++){
+                if(a[i].getTeamName().equals(teamName)){
+                    b[x] = a[i];
+                    x++;
+                }
+            }
+            return b[idx];
+        }
     }
 
     /**
@@ -156,7 +187,25 @@ public class SoccerDatabase implements SoccerDB {
     // write data to file
     @Override
     public boolean writeData(File file) {
-        return false;
+        SoccerPlayer[] a = database.values().toArray(new SoccerPlayer[database.size()]);
+
+        try {
+            PrintWriter myWritter = new PrintWriter("banannananabatman");
+            for(int i = 0; i < a.length; i++) {
+                myWritter.write("Player first name: " + a[i].getFirstName() + "\n");
+                myWritter.write("Player last name: " + a[i].getLastName() + "\n");
+                myWritter.write("Player team name: " + a[i].getTeamName() + "\n");
+                myWritter.write("Player uniform number: " + a[i].getUniform() + "\n");
+                myWritter.write("Player goal number: " + a[i].getGoals() + "\n");
+                myWritter.write("Player yellow card number: " + a[i].getYellowCards() + "\n");
+                myWritter.write("Player red card number: " + a[i].getRedCards() + "\n");
+                myWritter.close();
+            }
+            return true;
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+
     }
 
     /**
