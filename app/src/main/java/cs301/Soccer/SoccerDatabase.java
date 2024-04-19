@@ -176,6 +176,39 @@ public class SoccerDatabase implements SoccerDB {
     // read data from file
     @Override
     public boolean readData(File file) {
+        if(!file.exists()){ return false;}
+        try {
+            Scanner s = new Scanner(file);
+            while (s.hasNextLine()){
+                String fName = s.nextLine();
+                String lName = s.nextLine();
+                String team = s.nextLine();
+                int uniform = s.nextInt();
+                int goals = s.nextInt();
+                int yellow = s.nextInt();
+                int red = s.nextInt();
+                s.nextLine();
+                if(!addPlayer(fName, lName, uniform, team)){
+                    removePlayer(fName,lName);
+                    addPlayer(fName, lName, uniform, team);
+                }
+                else { addPlayer(fName, lName, uniform, team); }
+
+                for(int i = 0; i < goals; i++){
+                    bumpGoals(fName, lName);
+                }
+                for(int i = 0; i < yellow; i++){
+                    bumpYellowCards(fName, lName);
+                }
+                for(int i = 0; i < red; i++){
+                    bumpRedCards(fName, lName);
+                }
+            }
+            s.close();
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+
         return file.exists();
     }
 
@@ -190,17 +223,17 @@ public class SoccerDatabase implements SoccerDB {
         SoccerPlayer[] a = database.values().toArray(new SoccerPlayer[database.size()]);
 
         try {
-            PrintWriter myWritter = new PrintWriter("banannananabatman");
+            PrintWriter pw = new PrintWriter(file);
             for(int i = 0; i < a.length; i++) {
-                myWritter.write("Player first name: " + a[i].getFirstName() + "\n");
-                myWritter.write("Player last name: " + a[i].getLastName() + "\n");
-                myWritter.write("Player team name: " + a[i].getTeamName() + "\n");
-                myWritter.write("Player uniform number: " + a[i].getUniform() + "\n");
-                myWritter.write("Player goal number: " + a[i].getGoals() + "\n");
-                myWritter.write("Player yellow card number: " + a[i].getYellowCards() + "\n");
-                myWritter.write("Player red card number: " + a[i].getRedCards() + "\n");
-                myWritter.close();
+                pw.write(logString(a[i].getFirstName() + "\n"));
+                pw.write(logString( a[i].getLastName() + "\n"));
+                pw.write(logString(a[i].getTeamName() + "\n"));
+                pw.write(logString(a[i].getUniform() + "\n"));
+                pw.write(logString(a[i].getGoals() + "\n"));
+                pw.write(logString(a[i].getYellowCards() + "\n"));
+                pw.write(logString(a[i].getRedCards() + "\n"));
             }
+            pw.close();
             return true;
         } catch (FileNotFoundException e) {
             return false;
@@ -214,7 +247,7 @@ public class SoccerDatabase implements SoccerDB {
      * @return the string s, unchanged
      */
     private String logString(String s) {
-        Log.i("write string", s);
+//        Log.i("write string", s);
         return s;
     }
 
