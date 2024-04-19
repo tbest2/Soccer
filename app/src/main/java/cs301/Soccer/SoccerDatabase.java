@@ -208,6 +208,7 @@ public class SoccerDatabase implements SoccerDB {
         } catch (FileNotFoundException e) {
             return false;
         }
+
         return file.exists();
     }
 
